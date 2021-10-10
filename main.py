@@ -2,7 +2,10 @@ import telebot
 import subprocess
 from flask import Flask,request
 import os
+from pathlib import Path
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 TOKEN = "2081120283:AAHj45X-jrAW00cPtZnBA5fAWVuG6lCjLVk"
 bot = telebot.TeleBot(
@@ -17,13 +20,16 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: True,content_types=['document'])
 def get_apk(message):
+    print("running")
     fileData = message.document
     if(fileData[:3:-1] == "kpa."):
         data = bot.get_file(fileData.file_id)
         download_file = bot.download_file(data.file_path)
-        with open("file.apk",mode="wb")as file:
+        path = os.path.join(BASE_DIR,"file.apk")
+        print(path)
+        with open(path,mode="wb")as file:
             file.write(download_file)
-        data = subprocess.run(["apkid","file.apk"],capture_output=True)
+        data = subprocess.run(["apkid",path],capture_output=True)
         final_data = data.stdout.decode("utf-8")
         bot.reply_to(message,final_data)
     else:
