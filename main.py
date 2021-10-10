@@ -21,7 +21,7 @@ def send_welcome(message):
 @bot.message_handler(func=lambda message: True,content_types=['document'])
 def get_apk(message):
     fileData = message.document.file_name
-    print(fileData)
+    print(message.document)
     if(fileData[:3:-1] == "kpa."):
         data = bot.get_file(fileData.file_id)
         download_file = bot.download_file(data.file_path)
