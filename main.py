@@ -1,9 +1,13 @@
 import telebot
 import subprocess
+from flask import Flask,request
+import os
 
+
+TOKEN = "2081120283:AAHj45X-jrAW00cPtZnBA5fAWVuG6lCjLVk"
 bot = telebot.TeleBot(
     token="2081120283:AAHj45X-jrAW00cPtZnBA5fAWVuG6lCjLVk", parse_mode=None)
-
+server = Flask(__name__)
 
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
@@ -24,6 +28,22 @@ def get_apk(message):
         bot.reply_to(message,final_data)
     else:
         bot.reply_to(message,"Please Provide Valid apk file")
+
+
+@server.route('/' + TOKEN, methods=['POST'])
+def getMessage():
+    json_string = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
+    return "!", 200
+
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url='https://packcer-checker.herokuapp.com/' + TOKEN)
+    return "!", 200
     
 
-bot.infinity_polling()
+if __name__ == "__main__":
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
