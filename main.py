@@ -20,7 +20,7 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: True,content_types=['document'])
 def get_apk(message):
-    fileData = message.document
+    fileData = message.document.file_name
     print(fileData)
     if(fileData[:3:-1] == "kpa."):
         data = bot.get_file(fileData.file_id)
@@ -50,6 +50,5 @@ def webhook():
     bot.set_webhook(url='https://packcer-checker.herokuapp.com/' + TOKEN)
     return "!", 200
     
-bot.infinity_polling()
 if __name__ == "__main__":
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
