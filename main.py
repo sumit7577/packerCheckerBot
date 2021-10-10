@@ -18,17 +18,20 @@ def send_welcome(message):
 	    message, "Hey! i am an apk Packer checker Bot please Provide an apk file to get the packer details")
 
 
-@bot.message_handler(func=lambda message: True,content_types=['document'])
+@bot.message_handler(func=lambda message:True,content_types=['document'])
 def get_apk(message):
-    fileData = message.document.file_name
-    reversed = fileData[::-1]
-    data = bot.get_file(fileData.file_id)
-    download_file = bot.download_file(data.file_path)
-    with open("file.apk",mode="wb")as file:
-        file.write(download_file)
-    data = subprocess.run(["apkid","file.apk"],capture_output=True)
-    final_data = data.stdout.decode("utf-8")
-    bot.reply_to(message,final_data)
+    fileData = message.document
+    fileName = message.document.file_name
+    if(".apk" in fileName):
+        data = bot.get_file(fileData.file_id)
+        download_file = bot.download_file(data.file_path)
+        with open("file.apk",mode="wb")as file:
+            file.write(download_file)
+        data = subprocess.run(["apkid","file.apk"],capture_output=True)
+        final_data = data.stdout.decode("utf-8")
+        bot.reply_to(message,final_data)
+    else:
+        bot.reply_to(message,"Please Provide valid apk file")
 
 @server.route('/' + TOKEN, methods=['POST'])
 def getMessage():
@@ -44,5 +47,7 @@ def webhook():
     bot.set_webhook(url='https://packcer-checker.herokuapp.com/' + TOKEN)
     return "!", 200
     
+
+
 if __name__ == "__main__":
     server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
