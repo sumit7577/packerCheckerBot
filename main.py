@@ -5,17 +5,19 @@ import os
 from pathlib import Path
 
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 TOKEN = "2081120283:AAHj45X-jrAW00cPtZnBA5fAWVuG6lCjLVk"
 bot = telebot.TeleBot(
     token="2081120283:AAHj45X-jrAW00cPtZnBA5fAWVuG6lCjLVk", parse_mode=None)
 server = Flask(__name__)
+bot.set_webhook(url='https://packcer-checker.herokuapp.com/' + TOKEN)
 
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
     bot.reply_to(
-	    message, "Hey! i am an apk Packer checker Bot please Provide an apk file to get the packer details")
+	    message, "Hey! i am APKiD bot,provide me apk file to get Scan Results")
 
 
 @bot.message_handler(func=lambda message:True,content_types=['document'])
