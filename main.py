@@ -2,15 +2,14 @@ import telebot
 import subprocess
 from flask import Flask,request
 import os
-from pathlib import Path
 
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-TOKEN = "2081120283:AAHj45X-jrAW00cPtZnBA5fAWVuG6lCjLVk"
+
+TOKEN = os.environ.get("Token")
 bot = telebot.TeleBot(
-    token="2081120283:AAHj45X-jrAW00cPtZnBA5fAWVuG6lCjLVk", parse_mode=None)
+    token=TOKEN, parse_mode=None)
 server = Flask(__name__)
 bot.set_webhook(url='https://packcer-checker.herokuapp.com/' + TOKEN)
 
